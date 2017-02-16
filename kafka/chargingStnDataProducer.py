@@ -1,11 +1,17 @@
 import random
 import sys
-import six
+import time
 from datetime import datetime
 from kafka.client import SimpleClient
 from kafka.producer import KeyedProducer
-source_file = 'test1.csv'
-class Producer(object):
+source_file = 'org_charging_stn_data.csv'
+target_file = 'charging_station_history_1.csv'
+topic = 'charging_stn_data'
+import csv
+
+
+class Producer():
+    print("here")
     
     def __init__(self, addr):
         self.client = SimpleClient(addr)
@@ -13,18 +19,27 @@ class Producer(object):
 
     def produce_msgs(self, source_symbol):
         
+        print(" Simulating sensor data for charging stations....Press Ctrl C to abort..")
         while True:
-            f = open(source_file, 'r')
-            f.next();
-            for line in f:
-                data = line.split(",") 
-                message_info = line.rstrip();
-                ingestion_time = datetime.now().strftime("%Y%m%d %H%M%S")
-                available_spots = random.randint(0,10)
-                message_info += ","+ingestion_time +","+str(available_spots)
-                print message_info
-                self.producer.send_messages('new_price_data_part4', source_symbol, message_info)
-            f.close()
+            with open(source_file) as csvfile:
+                for data in csv.reader(csvfile):
+                    
+                    ingestion_time = datetime.now().strftime("%Y%m%d %H%M%S")
+                    
+                    available_spots = random.randint(0,10)
+                    #datetime, station_name, stnid, lat, lon, city, state, zipcode, connectors, available_spots
+                    message = (ingestion_time + ","+ data[1]+ "," + data[27]+ ","+data[24] +"," + data[25] + ","+ data[4] + "," + data[5] + "," + data[6] + "," + data[37] + "," + str(available_spots))  
+                    print(message)
+                   
+                    self.producer.send_messages(topic, source_symbol, message)
+            csvfile.close()
+            print("***********************Sleeping for 10 seconds**********************************************************")
+            time.sleep(10)
+            print("********************************************************************************************************")
+            
+            
+                   
+            
 
 if __name__ == "__main__":
     args = sys.argv
