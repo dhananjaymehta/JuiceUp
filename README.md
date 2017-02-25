@@ -31,17 +31,19 @@ Connector types
 Total charging outlets
 
 
-Streaming pipeline:
+# Streaming pipeline:
 
 The Data stream was ingested using Kafka topics. The data was filtered using Spark streaming and indexed into Elastic searh to serve geo location based queries.
 
-!()
 
-Batch data:
+![Streaming](streaming.png)
+
+# Batch :
 
 To collect historical data the streaming data was collected in batches using Spark and written into S3 as a source of truth.
 Batch data was partitioned by stations and time ordering and written to Cassandra to plot charts for statistics on hourly usage of charging stations.
 
+![Batch](streaming.png)
 
 Technology used : 
 
@@ -55,13 +57,13 @@ Batch :
 Spark
 
 Data store :
-Elastic search
-Cassandra
+Elastic search - (geo location queries by mapping location data as a geo point field)
+Cassandra - (time series data for stations)
 
 
 
 
-AWS Cluster configuration - 
+# AWS Cluster configuration :
 
 Spark and Kafka cluster - 1 Master and 3 Worker nodes m3.medium
 
