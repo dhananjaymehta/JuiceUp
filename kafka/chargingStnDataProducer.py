@@ -19,7 +19,7 @@ topic = CONFIG['TOPIC']
 
 
 class Producer():
-    print("here")
+
     
     def __init__(self, addr):
         self.client = SimpleClient(addr)
@@ -60,7 +60,7 @@ class Producer():
         if hour < 7 and hour > 21 :
             return random.randint(int(totalCount)/2 , totalCount)
         else:
-            return random.randint(0, int(totalCount)/2) 
+            return random.randint(0, int(totalCount)) 
                
             
         
